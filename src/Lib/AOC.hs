@@ -14,7 +14,12 @@ runSolution ::
   -> IO ()
 runSolution day part1 part2 = do
   input <- TIO.readFile ("data/day" ++ day ++ ".txt")
+  putStrLn $ "Day " ++ day
+  putStrLn "------------"
+
   putStrLn "Part 1:"
   print $ part1 input
   putStrLn "Part 2:"
   print $ part2 input
+
+  putStrLn "============"

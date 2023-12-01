@@ -1,5 +1,6 @@
 module Main (main) where
+import Solutions.Day01 (day01)
 
 main :: IO ()
 main = do
-  putStrLn "hello world"
+  day01
