@@ -16,8 +16,8 @@ strToColour "blue" = Blue
 strToColour "green" = Green
 strToColour _ = error "invalid colour"
 
-type GameInfoItem = (Colour, Int)
-type GameInfo = [GameInfoItem]
+type CubeCount = (Colour, Int)
+type GameInfo = [CubeCount]
 type Game = (Int, [GameInfo])
 type Input = [Game]
 
@@ -33,7 +33,7 @@ inputParser = linesOf $ do
   gameInfo <- (cubeCountParser `P.sepBy` ", ") `P.sepBy` "; "
   return (read gameId, gameInfo)
 
-cubeCountParser :: Parser GameInfoItem
+cubeCountParser :: Parser CubeCount
 cubeCountParser = do
   count <- P.many1 P.digit
   P.space
