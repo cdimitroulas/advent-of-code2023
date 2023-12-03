@@ -5,7 +5,6 @@ import qualified Data.Attoparsec.Text as P
 import Data.Attoparsec.Text (Parser)
 import Lib.Parsing (linesOf)
 import qualified Data.Text as T
-import Data.Either (fromRight)
 import Control.Applicative
 import Data.Text (Text)
 
@@ -44,13 +43,11 @@ cubeCountParser = do
 part1:: Input -> Int
 part1 = sum . map fst . filter gameIsPossible
   where
-    gameIsPossible (_, cubes) = all (all isPossibleCubeCount) cubes
+    gameIsPossible = all (all isPossibleCubeCount) . snd
 
-    isPossibleCubeCount cubeCount =
-      case cubeCount of
-        (Red, count) -> count <= 12
-        (Green, count) -> count <= 13
-        (Blue, count) -> count <= 14
+    isPossibleCubeCount (Red, count) = count <= 12
+    isPossibleCubeCount (Green, count) = count <= 13
+    isPossibleCubeCount (Blue, count) = count <= 14
 
 
 part2 :: Input -> Int
