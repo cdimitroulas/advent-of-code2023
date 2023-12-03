@@ -1,19 +1,18 @@
 module Lib.AOC (runSolution) where
 
-import           Data.Text    (Text)
-import qualified Data.Text.IO as TIO
-
 runSolution ::
   Show output =>
   String
-  -- ^ the day number as a string (e.g. "01" or "11")
-  -> (Text -> output)
+    -- ^ the day number as a string (e.g. "01" or "11")
+  -> (String -> input)
+  -- ^ parser
+  -> (input -> output)
   -- ^ the part1 solver fn
-  -> (Text -> output)
+  -> (input -> output)
   -- ^ the part2 solver fn
   -> IO ()
-runSolution day part1 part2 = do
-  input <- TIO.readFile ("data/day" ++ day ++ ".txt")
+runSolution day parser part1 part2 = do
+  input <- parser <$> readFile ("data/day" ++ day ++ ".txt")
   putStrLn $ "Day " ++ day
   putStrLn "------------"
 

@@ -1,24 +1,27 @@
-module Solutions.Day01 (day01) where
+module Solutions.Day01 (day01, parser, part1, part2) where
 
-import Data.Char (isDigit)
+import Data.Char (isDigit, digitToInt)
 import Lib.AOC (runSolution)
-import qualified Data.Text as T
-import Data.Text (Text)
+
+type Input = [String]
 
 day01 :: IO ()
-day01 = runSolution "01" part1 part2
+day01 = runSolution "01" lines part1 part2
 
-part1 :: Text -> Int
-part1 = sum . map (read . firstAndLast . filter isDigit) . lines . T.unpack
+parser :: String -> Input
+parser = lines
 
-part2 :: Text -> Int
-part2 = sum . map parseDigits . lines . T.unpack
+part1 :: Input -> Int
+part1 = sum . map (firstAndLast . map digitToInt . filter isDigit)
 
-firstAndLast :: [a] -> [a]
-firstAndLast x = head x : [last x]
+part2 :: Input -> Int
+part2 = sum . map parseDigits
+
+firstAndLast :: [Int] -> Int
+firstAndLast x = 10 * head x + last x
 
 parseDigits :: String -> Int
-parseDigits = read . firstAndLast . parseDigits'
+parseDigits = firstAndLast . map digitToInt . parseDigits'
   where
     parseDigits' [] = []
     parseDigits' ('o':'n':'e':xs) = "1" <> parseDigits' ("ne" <> xs)
