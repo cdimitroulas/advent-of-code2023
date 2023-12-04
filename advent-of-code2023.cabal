@@ -23,6 +23,7 @@ library
       Solutions.Day01
       Solutions.Day02
       Solutions.Day03
+      Solutions.Day04
   other-modules:
       Lib.AOC
       Lib.Matrix
@@ -75,6 +76,7 @@ executable advent-of-code2023
       Solutions.Day01
       Solutions.Day02
       Solutions.Day03
+      Solutions.Day04
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
@@ -120,6 +122,7 @@ test-suite unit-test
       Day01
       Day02
       Day03
+      Day04
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
