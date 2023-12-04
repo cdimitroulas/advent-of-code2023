@@ -1,11 +1,10 @@
 module Solutions.Day04 (day04, parser, part1, part2) where
 
 import qualified Data.Attoparsec.Text as P
-import Data.Foldable (foldl')
-import qualified Data.Map as M
-import Data.Map.Strict (Map)
+import Data.Foldable ( foldl', toList )
 import Data.Set (Set)
 import qualified Data.Set as S
+import qualified Data.Sequence as Seq
 import qualified Data.Text as T
 import Lib.AOC (runSolution)
 import Lib.Parsing (linesOf, number, spaces)
@@ -14,6 +13,9 @@ day04 :: IO ()
 day04 = runSolution "04" parser (fmap part1) (fmap part2)
 
 data Card = Card {cardNum :: Int, winningNums :: Set Int, playerNums :: Set Int, copies :: Int} deriving (Show)
+
+addCardCopies :: Int -> Card -> Card
+addCardCopies copiesToAdd c = c{copies = c.copies + copiesToAdd}
 
 type Input = [Card]
 
@@ -40,22 +42,19 @@ totalWinning :: Card -> Int
 totalWinning card = length $ S.intersection card.winningNums card.playerNums
 
 part2 :: Input -> Int
-part2 input = M.foldl' (\total card -> total + card.copies) 0 $ createCopies (cardNum $ head input) $ toMap input
+part2 input = sum $ map copies $ toList $ createCopies 0 $ Seq.fromList input
   where
-    toMap :: [Card] -> Map Int Card
-    toMap = foldl' (\m card -> M.insert card.cardNum card m) M.empty
+    createCopies idx cardsList
+      | idx == length cardsList - 1 = updatedCardCounts
+      | otherwise = createCopies (idx + 1) updatedCardCounts
+      where
+        updatedCardCounts = updateCardCounts (cardsList `Seq.index` idx) cardsList
 
-    createCopies idx m =
-      let currentCard = m M.! idx
-       in if idx == cardNum (last input)
-            then updateCardCounts currentCard m
-            else createCopies (idx + 1) (updateCardCounts currentCard m)
-
-    updateCardCounts :: Card -> Map Int Card -> Map Int Card
-    updateCardCounts card m =
-      let totalWon = totalWinning (m M.! card.cardNum)
-          cardNumsToCopy = if totalWon == 0 then [] else [card.cardNum + 1 .. card.cardNum + totalWon]
+    updateCardCounts :: Card -> Seq.Seq Card -> Seq.Seq Card
+    updateCardCounts card cardList =
+      let totalWon = totalWinning (cardList `Seq.index` (card.cardNum - 1))
        in foldl'
-            (flip (M.update (\c -> Just $ c {copies = c.copies + (1 * card.copies)})))
-            m
-            cardNumsToCopy
+            (\accum cardIdx ->
+              Seq.update cardIdx (addCardCopies (cardList `Seq.index` cardIdx).copies card) accum)
+            cardList
+            [card.cardNum .. card.cardNum + totalWon - 1]
