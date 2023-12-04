@@ -6,7 +6,7 @@ import Lib.AOC (runSolution)
 import Lib.Parsing (linesOf)
 import Data.Map.Strict (Map)
 import qualified Data.Map as M
-import Debug.Trace (traceShowId)
+import Data.Foldable (foldl')
 
 day04 :: IO ()
 day04 = runSolution "04" parser (fmap part1) (fmap part2)
@@ -34,10 +34,10 @@ totalWinning :: Card -> Int
 totalWinning card = length $ filter (`elem` card.playerNums) card.winningNums
 
 part2 :: Input -> Int
-part2 input = M.foldr (\card total -> total + card.copies) 0 $ createCopies (cardNum $ head input) $ toMap input
+part2 input = M.foldl' (\total card -> total + card.copies) 0 $ createCopies (cardNum $ head input) $ toMap input
   where
     toMap :: [Card] -> Map Int Card
-    toMap = foldr (\card m -> M.insert card.cardNum card m) M.empty
+    toMap = foldl' (\m card -> M.insert card.cardNum card m) M.empty
 
     createCopies idx m =
       let currentCard = m M.! idx
@@ -49,7 +49,7 @@ part2 input = M.foldr (\card total -> total + card.copies) 0 $ createCopies (car
     updateCardCounts card m =
       let totalWon = totalWinning (m M.! card.cardNum)
           cardNumsToCopy = if totalWon == 0 then [] else [card.cardNum + 1 .. card.cardNum + totalWon]
-      in foldr
-            (M.update (\c -> Just $ c { copies = c.copies + (1 * card.copies) }))
+      in foldl'
+            (flip (M.update (\c -> Just $ c { copies = c.copies + (1 * card.copies) })))
             m
             cardNumsToCopy
