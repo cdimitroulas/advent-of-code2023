@@ -4,10 +4,10 @@ import qualified Data.Attoparsec.Text as P
 import Data.Foldable ( foldl', toList )
 import Data.Set (Set)
 import qualified Data.Set as S
-import qualified Data.Sequence as Seq
 import qualified Data.Text as T
 import Lib.AOC (runSolution)
 import Lib.Parsing (linesOf, number, spaces)
+import qualified Data.Sequence as Seq
 
 day04 :: IO ()
 day04 = runSolution "04" parser (fmap part1) (fmap part2)
@@ -54,7 +54,6 @@ part2 input = sum $ map copies $ toList $ createCopies 0 $ Seq.fromList input
     updateCardCounts card cardList =
       let totalWon = totalWinning (cardList `Seq.index` (card.cardNum - 1))
        in foldl'
-            (\accum cardIdx ->
-              Seq.update cardIdx (addCardCopies (cardList `Seq.index` cardIdx).copies card) accum)
+            (\accum cardIdx -> Seq.update cardIdx (addCardCopies card.copies (cardList `Seq.index` cardIdx)) accum)
             cardList
             [card.cardNum .. card.cardNum + totalWon - 1]
