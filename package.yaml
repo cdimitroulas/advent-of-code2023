@@ -39,7 +39,9 @@ default-extensions:
 dependencies:
   - base >= 4.7 && < 5
   - attoparsec
+  - clock
   - containers
+  - formatting
   - regex-tdfa
   - text
   - vector
