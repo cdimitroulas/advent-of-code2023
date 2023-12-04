@@ -23,15 +23,15 @@ test_day03 = testGroup "Day03"
     testCase "part 1 - example input" $ do
       part1 <$> parser exampleInput @?= Right 4361,
 
-    -- testCase "part 1" $ do
-    --   input <- parser <$> readFile "data/day02.txt"
-    --   part1 <$> input @?= Right 2632,
+    testCase "part 1" $ do
+      input <- parser <$> readFile "data/day03.txt"
+      part1 <$> input @?= Right 525181,
 
     testCase "part 2 - example input" $ do
-      part2 <$> parser exampleInput @?= Right 467835
+      part2 <$> parser exampleInput @?= Right 467835,
 
-    -- testCase "part 2" $ do
-    --   input <- parser <$> readFile "data/day02.txt"
-    --   part2 <$> input @?= Right 69629
+    testCase "part 2" $ do
+      input <- parser <$> readFile "data/day03.txt"
+      part2 <$> input @?= Right 84289137
   ]
 

@@ -38,12 +38,9 @@ parser = fmap (V.map combineNumbers) . P.parseOnly (V.fromList <$> linesOf (V.fr
 
 part1 :: Input -> Int
 part1 input =
-  sum $
-    map (\(Number x) -> x) $
-      catMaybes $
-        removeConseqDups $
-          map (Matrix.! input) $
-            getPartNumberPositions input
+  let partNumberPositions = getPartNumberPositions input
+      partNumbers = map getNumberVal $ catMaybes $ removeConseqDups $ map (Matrix.! input) partNumberPositions
+   in sum partNumbers
 
 schematicItemParser :: P.Parser (Maybe SchematicItem)
 schematicItemParser =
