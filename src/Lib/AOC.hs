@@ -5,14 +5,14 @@ import Formatting
 import Formatting.Clock
 
 runSolution ::
-  Show output =>
+  Show output1 => Show output2 => 
   String
     -- ^ the day number as a string (e.g. "01" or "11")
   -> (String -> input)
   -- ^ parser
-  -> (input -> output)
+  -> (input -> output1)
   -- ^ the part1 solver fn
-  -> (input -> output)
+  -> (input -> output2)
   -- ^ the part2 solver fn
   -> IO ()
 runSolution day parser part1 part2 = do

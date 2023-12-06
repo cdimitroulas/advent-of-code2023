@@ -20,7 +20,7 @@ word = P.takeWhile (not . isSpace)
 wordsP :: Parser [Text]
 wordsP = word `P.sepBy` spaces
 
-number :: Parser Int
+number :: (Read a, Num a) => Parser a
 number = read <$> P.many1 P.digit
 
 linesOf :: Parser a -> Parser [a]
