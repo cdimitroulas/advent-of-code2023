@@ -25,12 +25,14 @@ library
       Solutions.Day03
       Solutions.Day04
       Solutions.Day05
+      Solutions.Day06
   other-modules:
       Lib.AOC
       Lib.List
       Lib.Matrix
       Lib.Parsing
       Main
+      Solutions.DayX
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
@@ -83,6 +85,8 @@ executable advent-of-code2023
       Solutions.Day03
       Solutions.Day04
       Solutions.Day05
+      Solutions.Day06
+      Solutions.DayX
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
@@ -132,6 +136,7 @@ test-suite unit-test
       Day03
       Day04
       Day05
+      Day06
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
