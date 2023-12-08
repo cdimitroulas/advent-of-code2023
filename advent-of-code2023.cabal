@@ -27,6 +27,7 @@ library
       Solutions.Day05
       Solutions.Day06
       Solutions.Day07
+      Solutions.Day08
   other-modules:
       Lib.AOC
       Lib.Common
@@ -92,6 +93,7 @@ executable advent-of-code2023
       Solutions.Day05
       Solutions.Day06
       Solutions.Day07
+      Solutions.Day08
       Solutions.DayX
       Paths_advent_of_code2023
   autogen-modules:
@@ -144,6 +146,7 @@ test-suite unit-test
       Day05
       Day06
       Day07
+      Day08
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
