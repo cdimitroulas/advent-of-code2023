@@ -19,7 +19,11 @@ differences (x1:x2:xs) = x2 - x1 : differences (x2:xs)
 extrapolateSequence1 :: ExtrapolateDir -> [Int] -> Int
 extrapolateSequence1 dir xs = go [] xs
     where
+      -- When extrapolating forwards we sum differences whereas when going backwards we minus
+      -- them
       combiner = if dir == Forward then (+) else (-)
+      -- If extrapolating forwards, we always grab the last element from the lists.
+      -- Otherwise we always grab the first element.
       accessor = if dir == Forward then last else head
       foldFn = foldl' (flip combiner) 0
 
