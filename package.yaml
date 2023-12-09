@@ -73,6 +73,7 @@ library:
     - Solutions.Day06
     - Solutions.Day07
     - Solutions.Day08
+    - Solutions.Day09
 
 tests:
   unit-test:
