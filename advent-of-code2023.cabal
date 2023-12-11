@@ -36,6 +36,7 @@ library
       Lib.Map
       Lib.Matrix
       Lib.Parsing
+      Lib.Range
       Main
       Solutions.DayX
       Paths_advent_of_code2023
@@ -87,6 +88,7 @@ executable advent-of-code2023
       Lib.Map
       Lib.Matrix
       Lib.Parsing
+      Lib.Range
       Solutions.Day01
       Solutions.Day02
       Solutions.Day03

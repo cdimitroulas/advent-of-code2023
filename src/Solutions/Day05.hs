@@ -6,11 +6,12 @@ import Control.Monad.ST (runST)
 import qualified Data.Attoparsec.Text as P
 import Data.Foldable (Foldable (foldl'))
 import Data.Function ((&))
-import Data.Maybe (fromMaybe, isJust)
+import Data.Maybe (fromMaybe, isJust, catMaybes)
 import Data.STRef
 import qualified Data.Text as T
 import Lib.AOC (runSolution)
 import Lib.Parsing (linesOf, number, skipRestOfLine, spaces)
+import qualified Lib.Range as R
 
 data MappingRange = MappingRange {destRangeStart :: Integer, srcRangeStart :: Integer, rangeLength :: Integer}
   deriving (Eq, Show)
@@ -61,26 +62,16 @@ part1 :: Input -> Integer
 part1 = minimum . mapSeeds
 
 -- Part 2
-type Range = (Integer, Integer)
-
-isValidRange :: Range -> Bool
-isValidRange (x1, x2) = x1 <= x2
-
-rangeOverlap :: Range -> Range -> Maybe Range
-rangeOverlap (x1, x2) (y1, y2)
-  | x2 < y1 || y2 < x1 = Nothing
-  | otherwise = Just (max x1 y1, min x2 y2)
-
-mappingRangeToFn' :: MappingRange -> (Range -> Maybe (Range, [Range]))
-mappingRangeToFn' MappingRange{..} src@(x1, x2) =
+mappingRangeToFn' :: MappingRange -> (R.Range -> Maybe (R.Range, [R.Range]))
+mappingRangeToFn' MappingRange{..} src@(R.Range (x1, x2)) =
   let mapValue v = destRangeStart + (v - srcRangeStart)
-   in case rangeOverlap src (srcRangeStart, srcRangeStart + rangeLength - 1) of
+   in case R.getOverlap src (R.Range (srcRangeStart, srcRangeStart + rangeLength - 1)) of
         -- Returns a tuple where the first element is the mapped range and the snd element is a list of unmapped ranges
-        Just (oStart, oEnd) ->
-          Just ((mapValue oStart, mapValue oEnd), filter isValidRange $ (x1, oStart - 1) : [(oEnd + 1, x2)])
+        Just overlap@(R.Range (oStart, oEnd)) ->
+          Just  (R.map mapValue overlap, catMaybes (R.mkRange (x1, oStart - 1) : [R.mkRange (oEnd + 1, x2)]))
         Nothing -> Nothing
 
-mappingToFn' :: Mapping -> (Range -> [Range])
+mappingToFn' :: Mapping -> (R.Range -> [R.Range])
 mappingToFn' mapping src = runST $ do
   rangesToMapRef <- newSTRef [src]
   mappedRangesRef <- newSTRef []
@@ -108,23 +99,21 @@ mappingToFn' mapping src = runST $ do
   unmappedRanges <- readSTRef rangesToMapRef
   return (mappedRanges <> unmappedRanges)
 
-mapSeedRange :: [Range -> [Range]] -> Range -> [Range]
+mapSeedRange :: [R.Range -> [R.Range]] -> R.Range -> [R.Range]
 mapSeedRange mappingFns seed = foldl' (flip concatMap) [seed] mappingFns
 
-mapSeedRanges :: ([Range], [Mapping]) -> [(Integer, Integer)]
+mapSeedRanges :: ([R.Range], [Mapping]) -> [R.Range]
 mapSeedRanges (seeds, mappings) =
   let mappingFns = map mappingToFn' mappings
    in concatMap (mapSeedRange mappingFns) seeds
 
 part2 :: Input -> Integer
-part2 (seeds, mappings) = minimum $ map getLowerBound $ mapSeedRanges (toRanges seeds, mappings)
- where
-  getLowerBound = fst
+part2 (seeds, mappings) = minimum $ map R.start $ mapSeedRanges (toRanges seeds, mappings)
 
-toRanges :: [Integer] -> [Range]
+toRanges :: [Integer] -> [R.Range]
 toRanges [] = []
 toRanges [_] = error "Invalid list provided to toRanges. Must have an even number of elems"
-toRanges (x1 : x2 : xs) = (x1, x1 + x2 - 1) : toRanges xs
+toRanges (x1 : x2 : xs) = R.Range (x1, x1 + x2 - 1) : toRanges xs
 
 day05 :: IO ()
 day05 = runSolution "05" parser (fmap part1) (fmap part2)
