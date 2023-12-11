@@ -1,7 +1,6 @@
 module Solutions.Day09 (day09, parser, part1, part2) where
 
 import Lib.AOC (runSolution)
-import Data.List (foldl')
 
 type Input = [[Int]]
 
@@ -15,29 +14,21 @@ differences [] = []
 differences [_] = []
 differences (x1:x2:xs) = x2 - x1 : differences (x2:xs)
 
--- Returns the next/previous element for a sequence
-extrapolateSequence1 :: ExtrapolateDir -> [Int] -> Int
-extrapolateSequence1 dir xs = go [] xs
+extrapolateSequence1 :: [Int] -> Int
+extrapolateSequence1 xs = go [] xs
     where
-      -- When extrapolating forwards we sum differences whereas when going backwards we minus
-      -- them
-      combiner = if dir == Forward then (+) else (-)
-      -- If extrapolating forwards, we always grab the last element from the lists.
-      -- Otherwise we always grab the first element.
-      accessor = if dir == Forward then last else head
-      foldFn = foldl' (flip combiner) 0
-
       go :: [Int] -> [Int] -> Int
       go diffs next
-        | all (== 0) next = accessor xs `combiner` foldFn diffs
+        | all (== 0) next = last xs + sum diffs
         | otherwise = let seqDifferences = differences next
-                      in go (accessor seqDifferences : diffs) seqDifferences
+                      in go (last seqDifferences : diffs) seqDifferences
 
 part1 :: Input -> Int
-part1 = sum . map (extrapolateSequence1 Forward)
+part1 = sum . map extrapolateSequence1
 
+-- Extrapolating backwards is just the same as extrapolating forwards on the reversed list 
 part2 :: Input -> Int
-part2 = sum . map (extrapolateSequence1 Back)
+part2 = part1 . map reverse
 
 day09 :: IO ()
 day09 = runSolution "09" parser part1 part2
