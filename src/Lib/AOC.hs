@@ -22,13 +22,15 @@ runSolution day parser part1 part2 = do
 
   putStrLn "Part 1:"
   p1Start <- getTime Monotonic
-  print $ part1 input
+  putStr $ show $ part1 input
+  putStrLn ""
   p1End <- getTime Monotonic
   fprint (timeSpecs % "\n") p1Start p1End
 
   putStrLn "Part 2:"
   p2Start <- getTime Monotonic
-  print $ part2 input
+  putStr $ show $ part2 input
+  putStrLn ""
   p2End <- getTime Monotonic
   fprint (timeSpecs % "\n") p2Start p2End
 

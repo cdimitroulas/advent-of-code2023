@@ -29,6 +29,7 @@ library
       Solutions.Day07
       Solutions.Day08
       Solutions.Day09
+      Solutions.Day11
   other-modules:
       Lib.AOC
       Lib.Common
@@ -37,6 +38,7 @@ library
       Lib.Matrix
       Lib.Parsing
       Lib.Range
+      Lib.SearchAlgorithms
       Main
       Solutions.DayX
       Paths_advent_of_code2023
@@ -69,13 +71,17 @@ library
       TypeOperators
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      attoparsec
+      array
+    , attoparsec
     , base >=4.7 && <5
     , clock
     , containers
     , formatting
+    , hashable
+    , heap
     , regex-tdfa
     , text
+    , unordered-containers
     , vector
   default-language: Haskell2010
 
@@ -89,6 +95,7 @@ executable advent-of-code2023
       Lib.Matrix
       Lib.Parsing
       Lib.Range
+      Lib.SearchAlgorithms
       Solutions.Day01
       Solutions.Day02
       Solutions.Day03
@@ -98,6 +105,7 @@ executable advent-of-code2023
       Solutions.Day07
       Solutions.Day08
       Solutions.Day09
+      Solutions.Day11
       Solutions.DayX
       Paths_advent_of_code2023
   autogen-modules:
@@ -129,13 +137,17 @@ executable advent-of-code2023
       TypeOperators
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      attoparsec
+      array
+    , attoparsec
     , base >=4.7 && <5
     , clock
     , containers
     , formatting
+    , hashable
+    , heap
     , regex-tdfa
     , text
+    , unordered-containers
     , vector
   default-language: Haskell2010
 
@@ -152,6 +164,7 @@ test-suite unit-test
       Day07
       Day08
       Day09
+      Day11
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
@@ -185,14 +198,18 @@ test-suite unit-test
       tasty-discover:tasty-discover
   build-depends:
       advent-of-code2023
+    , array
     , attoparsec
     , base >=4.7 && <5
     , clock
     , containers
     , formatting
+    , hashable
+    , heap
     , regex-tdfa
     , tasty
     , tasty-hunit
     , text
+    , unordered-containers
     , vector
   default-language: Haskell2010

@@ -38,12 +38,16 @@ default-extensions:
 
 dependencies:
   - base >= 4.7 && < 5
+  - array
   - attoparsec
   - clock
   - containers
   - formatting
+  - hashable
+  - heap
   - regex-tdfa
   - text
+  - unordered-containers
   - vector
 
 ghc-options:
@@ -74,6 +78,7 @@ library:
     - Solutions.Day07
     - Solutions.Day08
     - Solutions.Day09
+    - Solutions.Day11
 
 tests:
   unit-test:

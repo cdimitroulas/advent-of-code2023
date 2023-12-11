@@ -8,6 +8,7 @@ import Solutions.Day06 (day06)
 import Solutions.Day07 (day07)
 import Solutions.Day08 (day08)
 import Solutions.Day09 (day09)
+import Solutions.Day11 (day11)
 
 main :: IO ()
 main = do
@@ -19,4 +20,5 @@ main = do
   -- day06
   -- day07
   -- day08
-  day09
+  -- day09
+  day11

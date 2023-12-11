@@ -1,4 +1,4 @@
-module Lib.List (safeHead, setAt, (!?)) where
+module Lib.List (safeHead, setAt, (!?), pairs) where
 
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
@@ -15,3 +15,8 @@ xs !? n
 
 setAt :: [a] -> Int -> a -> [a]
 setAt xs i x = take i xs ++ [x] ++ drop (i + 1) xs
+
+pairs :: Eq a => [a] -> [(a, a)]
+pairs [] = []
+pairs [_] = error "Odd length list provided to pairs"
+pairs (x1:x2:xs) = (x1, x2) : pairs xs
