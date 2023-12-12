@@ -1,4 +1,4 @@
-module Lib.Matrix (Matrix, (!), (!?), height, width, insertCol, insertRow, getRow, getCol, getCols, findColIndices, findRowIndices, Lib.Matrix.toList, findLocations) where
+module Lib.Matrix (Matrix, (!), (!?), height, width, insertCol, insertRow, getRow, getCol, getCols, findColIndices, findRowIndices, Lib.Matrix.toList, findLocations, Lib.Matrix.map, updateRow, updateCol) where
 
 import Data.Foldable (toList)
 import Data.List (findIndices)
@@ -25,8 +25,14 @@ width = S.length . (`S.index` 0)
 insertCol :: Seq a -> Int -> Matrix a -> Matrix a
 insertCol col colIdx = fmap (S.insertAt colIdx (col `S.index` colIdx))
 
+updateCol :: Seq a -> Int -> Matrix a -> Matrix a
+updateCol col colIdx = fmap (S.update colIdx (col `S.index` colIdx))
+
 insertRow :: Seq a -> Int -> Matrix a -> Matrix a
 insertRow row rowIdx = S.insertAt rowIdx row
+
+updateRow :: Seq a -> Int -> Matrix a -> Matrix a
+updateRow row rowIdx = S.update rowIdx row
 
 getRow :: Int -> Matrix a -> Seq a
 getRow = flip S.index
@@ -48,3 +54,6 @@ toList mat = Data.Foldable.toList $ fmap Data.Foldable.toList mat
 
 findLocations :: (a -> Bool) -> Matrix a -> [(Int, Int)]
 findLocations predicate mat = [(x, y) | y <- [0 .. height mat - 1], x <- [0 .. width mat - 1], predicate (mat ! (x, y))]
+
+map :: (a -> b) -> Matrix a -> Matrix b
+map f = fmap (fmap f)

@@ -3,7 +3,7 @@
 module Day11 where
 
 import qualified Data.Sequence as S
-import Solutions.Day11 (parser, part1, part2)
+import Solutions.Day11 (parser, part1, part2, sumOfGalaxyDistances)
 import Test.Tasty
 import Test.Tasty.HUnit
 
@@ -45,10 +45,13 @@ test_day11 =
         input <- parser <$> readFile "data/day11.txt"
         part1 input @?= 9445168
 
-    -- , testCase "part 2 - example input" $ do
-    --     part2 (parser exampleInput) @?= 2
+    , testCase "part 2 - example input" $ do
+        sumOfGalaxyDistances 10 (parser exampleInput) @?= 1030
+
+    , testCase "part 2 - example input (factor 100)" $ do
+        sumOfGalaxyDistances 100 (parser exampleInput) @?= 8410 
 
     -- , testCase "part 2" $ do
     --     input <- parser <$> readFile "data/day11.txt"
-    --     part2 input @?= 957
+    --     part2 input @?= 100 -- TODO: get real value
     ]
