@@ -30,6 +30,7 @@ library
       Solutions.Day08
       Solutions.Day09
       Solutions.Day11
+      Solutions.Day12
   other-modules:
       Lib.AOC
       Lib.Common
@@ -80,6 +81,7 @@ library
     , hashable
     , heap
     , regex-tdfa
+    , split
     , text
     , unordered-containers
     , vector
@@ -106,6 +108,7 @@ executable advent-of-code2023
       Solutions.Day08
       Solutions.Day09
       Solutions.Day11
+      Solutions.Day12
       Solutions.DayX
       Paths_advent_of_code2023
   autogen-modules:
@@ -146,6 +149,7 @@ executable advent-of-code2023
     , hashable
     , heap
     , regex-tdfa
+    , split
     , text
     , unordered-containers
     , vector
@@ -165,6 +169,7 @@ test-suite unit-test
       Day08
       Day09
       Day11
+      Day12
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
@@ -207,6 +212,7 @@ test-suite unit-test
     , hashable
     , heap
     , regex-tdfa
+    , split
     , tasty
     , tasty-hunit
     , text
