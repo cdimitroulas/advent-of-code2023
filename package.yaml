@@ -81,6 +81,7 @@ library:
     - Solutions.Day09
     - Solutions.Day11
     - Solutions.Day12
+    - Solutions.Day13
 
 tests:
   unit-test:
