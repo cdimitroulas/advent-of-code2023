@@ -32,6 +32,7 @@ library
       Solutions.Day11
       Solutions.Day12
       Solutions.Day13
+      Solutions.Day14
   other-modules:
       Lib.AOC
       Lib.Common
@@ -81,6 +82,7 @@ library
     , formatting
     , hashable
     , heap
+    , mtl
     , regex-tdfa
     , split
     , text
@@ -111,6 +113,7 @@ executable advent-of-code2023
       Solutions.Day11
       Solutions.Day12
       Solutions.Day13
+      Solutions.Day14
       Solutions.DayX
       Paths_advent_of_code2023
   autogen-modules:
@@ -150,6 +153,7 @@ executable advent-of-code2023
     , formatting
     , hashable
     , heap
+    , mtl
     , regex-tdfa
     , split
     , text
@@ -173,6 +177,7 @@ test-suite unit-test
       Day11
       Day12
       Day13
+      Day14
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
@@ -214,6 +219,7 @@ test-suite unit-test
     , formatting
     , hashable
     , heap
+    , mtl
     , regex-tdfa
     , split
     , tasty

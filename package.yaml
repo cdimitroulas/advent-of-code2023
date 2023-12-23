@@ -45,6 +45,7 @@ dependencies:
   - formatting
   - hashable
   - heap
+  - mtl
   - regex-tdfa
   - split
   - text
@@ -82,6 +83,7 @@ library:
     - Solutions.Day11
     - Solutions.Day12
     - Solutions.Day13
+    - Solutions.Day14
 
 tests:
   unit-test:

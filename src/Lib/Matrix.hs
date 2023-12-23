@@ -1,9 +1,35 @@
-module Lib.Matrix (Matrix, (!), (!?), height, width, insertCol, insertRow, getRow, getCol, getCols, findColIndices, findRowIndices, Lib.Matrix.toList, findLocations, Lib.Matrix.map, updateRow, updateCol) where
+module Lib.Matrix (
+  Matrix,
+  (!),
+  (!?),
+  height,
+  width,
+  insertCol,
+  insertRow,
+  getRow,
+  getCol,
+  getCols,
+  findColIndices,
+  findRowIndices,
+  Lib.Matrix.toList,
+  findLocations,
+  Lib.Matrix.map,
+  updateRow,
+  updateCol,
+  toArray,
+  fromList,
+  transpose,
+  mapCols,
+  mapRows
+) where
 
+import Data.Array (Array)
+import qualified Data.Array as A
 import Data.Foldable (toList)
 import Data.List (findIndices)
 import Data.Sequence (Seq)
 import qualified Data.Sequence as S
+import Lib.List (mapWithIndex)
 import Prelude hiding (elem)
 
 type Matrix a = Seq (Seq a)
@@ -50,10 +76,28 @@ findRowIndices :: (Seq a -> Bool) -> Matrix a -> [Int]
 findRowIndices = S.findIndicesL
 
 toList :: Matrix a -> [[a]]
-toList mat = Data.Foldable.toList $ fmap Data.Foldable.toList mat
+toList = Data.Foldable.toList . fmap Data.Foldable.toList
+
+fromList :: [[a]] -> Matrix a
+fromList = S.fromList . fmap S.fromList
+
+toArray :: Matrix a -> Array (Int, Int) a
+toArray mat = A.array ((0, 0), fst $ last elemsWithPositions) elemsWithPositions
+ where
+  elemsWithPositions = concat $ mapWithIndex (\y line -> mapWithIndex (\x c -> ((x, y), c)) line) $ Lib.Matrix.toList mat
 
 findLocations :: (a -> Bool) -> Matrix a -> [(Int, Int)]
 findLocations predicate mat = [(x, y) | y <- [0 .. height mat - 1], x <- [0 .. width mat - 1], predicate (mat ! (x, y))]
 
+-- Swaps columns/rows
+transpose :: Matrix a -> Matrix a
+transpose = S.fromList . getCols
+
 map :: (a -> b) -> Matrix a -> Matrix b
 map f = fmap (fmap f)
+
+mapCols :: ([a] -> [b]) -> Matrix a -> Matrix b
+mapCols f mat = transpose $ S.fromList $ Prelude.map (S.fromList . f . Data.Foldable.toList)  $ getCols mat
+
+mapRows :: ([a] -> [b]) -> Matrix a -> Matrix b
+mapRows f mat = S.fromList $ Prelude.map (S.fromList . f . Data.Foldable.toList) $ Data.Foldable.toList mat

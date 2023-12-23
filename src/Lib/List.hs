@@ -1,4 +1,6 @@
-module Lib.List (safeHead, setAt, (!?), pairs) where
+module Lib.List (safeHead, setAt, (!?), pairs, mapWithIndex, findCycle) where
+
+import qualified Data.Map.Strict as M
 
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
@@ -20,3 +22,18 @@ pairs :: Eq a => [a] -> [(a, a)]
 pairs [] = []
 pairs [_] = error "Odd length list provided to pairs"
 pairs (x1:x2:xs) = (x1, x2) : pairs xs
+
+mapWithIndex :: (Int -> a -> b) -> [a] -> [b]
+mapWithIndex f = go 0 
+  where
+    go _ [] = []
+    go idx (x:xs) = f idx x : go (idx + 1) xs
+
+findCycle :: Ord a => [a] -> (Int, Int)
+findCycle = go M.empty 0
+  where
+    go _ _ [] = error "no cycle"
+    go seen i (x:xs) =
+      case M.lookup x seen of
+        Nothing -> go (M.insert x i seen) (i + 1) xs
+        Just j  -> (j, i)
