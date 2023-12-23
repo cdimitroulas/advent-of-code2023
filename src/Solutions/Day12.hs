@@ -5,10 +5,12 @@ import Data.Char (isDigit, digitToInt)
 import qualified Data.Attoparsec.Text as P
 import qualified Data.Text as T
 import Debug.Trace
-import Data.List (nub)
+import Data.List (nub, intercalate)
 import Data.List.Split (splitOn)
 
-type Input = [(String, [Int])]
+type Record = (String, [Int])
+
+type Input = [Record]
 
 parser :: String -> Input
 parser = map ((\[x1, x2] -> (x1, map read (splitOn "," x2))) . words) . lines
@@ -24,8 +26,8 @@ stringGroupSizeParser = do
   groups <- P.many1 (P.char '#') `P.sepBy` P.many1 (P.char '.')
   pure (map length groups)
 
-bruteForce :: (String, [Int]) -> Int
-bruteForce (str, groupSizes) = length $ nub $ (\s -> traceShow (groupSizes, s) s) $ filter isValidString (allPossibleStrings str)
+bruteForce :: Record -> Int
+bruteForce (str, groupSizes) = length $ nub $ filter isValidString (allPossibleStrings str)
   where
     isValidString s = P.parseOnly stringGroupSizeParser (T.pack s) == Right groupSizes
 
@@ -56,10 +58,13 @@ bruteForce (str, groupSizes) = length $ nub $ (\s -> traceShow (groupSizes, s) s
 --     isHashOrQ char = char == '#' || char == '?'
 
 part1 :: Input -> Int
-part1 = sum . map bruteForce . traceShowId
+part1 = sum . map bruteForce
+
+unfold :: Record -> Record
+unfold (str, groupSizes) = (intercalate "?" $ replicate 5 str, concat $ replicate 5 groupSizes)
 
 part2 :: Input -> Int
-part2 = const 0
+part2 = sum . map (bruteForce . unfold)
 
 day12 :: IO ()
 day12 = runSolution "12" parser part1 part2
