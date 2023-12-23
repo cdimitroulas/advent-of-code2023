@@ -29,11 +29,11 @@ mapWithIndex f = go 0
     go _ [] = []
     go idx (x:xs) = f idx x : go (idx + 1) xs
 
-findCycle :: Ord a => [a] -> (Int, Int)
+findCycle :: Ord a => [a] -> Maybe (Int, Int)
 findCycle = go M.empty 0
   where
-    go _ _ [] = error "no cycle"
+    go _ _ [] = Nothing
     go seen i (x:xs) =
       case M.lookup x seen of
         Nothing -> go (M.insert x i seen) (i + 1) xs
-        Just j  -> (j, i)
+        Just j  -> Just (j, i)

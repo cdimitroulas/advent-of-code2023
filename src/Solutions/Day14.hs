@@ -8,6 +8,7 @@ import Lib.AOC (runSolution)
 import Lib.List (findCycle)
 import Lib.Matrix (Matrix)
 import qualified Lib.Matrix as Mat
+import Data.Maybe (fromJust)
 
 type Input = Matrix Char
 
@@ -40,7 +41,7 @@ cycleRocks = rollRocks E . rollRocks S . rollRocks W . rollRocks N
 part2 :: Input -> Int
 part2 input =
   let cycleResults = iterate cycleRocks input
-      (start, next) = findCycle cycleResults
+      (start, next) = fromJust $ findCycle cycleResults
       idx = start + (1_000_000_000 - start) `rem` (next - start)
    in totalLoad (cycleResults !! idx)
 
