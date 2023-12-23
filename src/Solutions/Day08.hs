@@ -35,6 +35,8 @@ turn 'L' = fst
 turn 'R' = snd
 
 runPath :: Input -> String -> Int -> Int
+-- We just check the last char is Z so that it works for both part 1 and 2 even though technically
+-- part 1 requires us to look for "ZZZ"
 runPath _ node steps | last node == 'Z' = steps
 runPath input@(directions, mapLines) node0 steps =
   let node1 = turn (directions !! steps) (mapLines M.! node0)
