@@ -8,12 +8,10 @@ import Lib.AOC (runSolution)
 import Lib.Matrix (Matrix)
 import qualified Lib.Matrix as Mat
 
-data Direction = Up | Down | Left' | Right' deriving (Show, Eq)
+data Direction = U | D | L | R deriving (Show, Eq)
 
 isVerticalDir :: Direction -> Bool
-isVerticalDir dir
-  | dir == Up || dir == Down = True
-  | otherwise = False
+isVerticalDir dir = dir == U || dir == D
 
 isHorizontalDir :: Direction -> Bool
 isHorizontalDir = not . isVerticalDir
@@ -27,27 +25,27 @@ type Energized = Map (Int, Int) [Direction]
 type BeamState = (Direction, (Int, Int))
 
 move :: (Int, Int) -> Direction -> (Int, Int)
-move (x, y) Up = (x, y - 1)
-move (x, y) Down = (x, y + 1)
-move (x, y) Left' = (x - 1, y)
-move (x, y) Right' = (x + 1, y)
+move (x, y) U = (x, y - 1)
+move (x, y) D = (x, y + 1)
+move (x, y) L = (x - 1, y)
+move (x, y) R = (x + 1, y)
 
 step :: BeamState -> Char -> [BeamState]
 step (dir, pos) '.' = [(dir, move pos dir)]
 step (dir, pos) '|'
   | isVerticalDir dir = [(dir, move pos dir)]
-  | otherwise = [(Up, move pos Up), (Down, move pos Down)]
+  | otherwise = [(U, move pos U), (D, move pos D)]
 step (dir, pos) '-'
   | isHorizontalDir dir = [(dir, move pos dir)]
-  | otherwise = [(Left', move pos Left'), (Right', move pos Right')]
-step (Up, pos) '/' = [(Right', move pos Right')]
-step (Left', pos) '/' = [(Down, move pos Down)]
-step (Down, pos) '/' = [(Left', move pos Left')]
-step (Right', pos) '/' = [(Up, move pos Up)]
-step (Up, pos) '\\' = [(Left', move pos Left')]
-step (Left', pos) '\\' = [(Up, move pos Up)]
-step (Down, pos) '\\' = [(Right', move pos Right')]
-step (Right', pos) '\\' = [(Down, move pos Down)]
+  | otherwise = [(L, move pos L), (R, move pos R)]
+step (U, pos) '/' = [(R, move pos R)]
+step (L, pos) '/' = [(D, move pos D)]
+step (D, pos) '/' = [(L, move pos L)]
+step (R, pos) '/' = [(U, move pos U)]
+step (U, pos) '\\' = [(L, move pos L)]
+step (L, pos) '\\' = [(U, move pos U)]
+step (D, pos) '\\' = [(R, move pos R)]
+step (R, pos) '\\' = [(D, move pos D)]
 step _ t = error $ "Invalid tile value: " ++ show t
 
 processBeams :: Input -> [BeamState] -> State Energized [BeamState]
@@ -77,7 +75,7 @@ processBeams input beams = do
 
 part1 :: Input -> Int
 part1 input =
-  let (_, energizedTiles) = S.runState (processBeams input [(Right', (0, 0))]) M.empty
+  let (_, energizedTiles) = S.runState (processBeams input [(R, (0, 0))]) M.empty
    in M.size energizedTiles
 
 part2 :: Input -> Int
@@ -85,10 +83,10 @@ part2 input =
   let maxX = Mat.width input - 1
       maxY = Mat.height input - 1
       starts =
-        [(Down, pos) | x <- [0 .. maxX], let pos = (x, 0)]
-          <> [(Up, pos) | x <- [0 .. maxX], let pos = (x, maxY)]
-          <> [(Right', pos) | y <- [0 .. maxY], let pos = (0, y)]
-          <> [(Left', pos) | y <- [0 .. maxY], let pos = (maxX, y)]
+        [(D, pos) | x <- [0 .. maxX], let pos = (x, 0)]
+          <> [(U, pos) | x <- [0 .. maxX], let pos = (x, maxY)]
+          <> [(R, pos) | y <- [0 .. maxY], let pos = (0, y)]
+          <> [(L, pos) | y <- [0 .. maxY], let pos = (maxX, y)]
    in maximum $ map (M.size . snd . (\x -> S.runState (processBeams input [x]) M.empty)) starts
 
 day16 :: IO ()
