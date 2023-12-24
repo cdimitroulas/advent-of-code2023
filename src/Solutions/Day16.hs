@@ -59,9 +59,6 @@ step (Left', pos) Bslash = [(Up, move pos Up)]
 step (Down, pos) Bslash = [(Right', move pos Right')]
 step (Right', pos) Bslash = [(Down, move pos Down)]
 
--- TODO: need to handle infinite beam bouncing, as sometimes beam can keep going around a certain cycle
--- forever.
--- Perhaps if the same BeamState has been processed multile times then we can stop?
 processBeams :: Input -> [BeamState] -> State Energized [BeamState]
 processBeams _ [] = return []
 processBeams input beams = do
@@ -76,16 +73,15 @@ processBeams input beams = do
       Just tile -> do
           case energized M.!? pos of
             -- If a beam passing in the specific direction has already been processed at this position,
-            -- it means we don't need to calculate it further as it has already been calculated.
-            Just dirs -> if dir `elem` dirs 
-                         then return []
-                         else do
-                          S.modify $ M.alter (Just . maybe [] (dir :)) pos
-                          return $ step beam tile
-            -- TODO: how can I avoid repeating these two lines again below?
-            Nothing -> do
-                S.modify $ M.alter (Just . maybe [] (dir :)) pos
-                return $ step beam tile
+            -- it means we don't need to calculate it further (as it will have the same result we previously
+            -- calculated).
+            Just dirs -> if dir `elem` dirs then return [] else getNextBeams ()
+            Nothing -> getNextBeams ()
+        where
+          getNextBeams :: () -> State Energized [BeamState]
+          getNextBeams _ = do
+            S.modify $ M.alter (Just . maybe [] (dir :)) pos
+            return $ step beam tile
 
 
   processBeams input nextBeams
