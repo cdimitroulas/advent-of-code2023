@@ -93,10 +93,12 @@ part1 input =
 
 part2 :: Input -> Int
 part2 input = 
-  let downInputs = map ((Down,) . (,0)) [0 .. Mat.width input - 1]
-      upInputs = map ((Up,) . (, Mat.height input - 1)) [0 .. Mat.width input - 1]
-      rightInputs = map ((Right',) . (0,)) [0 .. Mat.height input - 1]
-      leftInputs = map ((Left',) . (Mat.width input - 1,)) [0 .. Mat.height input - 1]
+  let maxX = Mat.width input - 1
+      maxY = Mat.height input - 1
+      downInputs = map ((Down,) . (,0)) [0 .. maxX]
+      upInputs = map ((Up,) . (, maxY)) [0 .. maxX]
+      rightInputs = map ((Right',) . (0,)) [0 .. maxY]
+      leftInputs = map ((Left',) . (maxX,)) [0 .. maxY]
       allInputs = concat [downInputs, upInputs, rightInputs, leftInputs]
   in maximum $ map (M.size . snd . (\x -> S.runState (processBeams input [x]) M.empty)) allInputs
 
