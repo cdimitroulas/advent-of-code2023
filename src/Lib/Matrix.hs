@@ -2,6 +2,7 @@ module Lib.Matrix (
   Matrix,
   (!),
   (!?),
+  update,
   height,
   width,
   insertCol,
@@ -20,7 +21,8 @@ module Lib.Matrix (
   fromList,
   transpose,
   mapCols,
-  mapRows
+  mapRows,
+  prettyPrint
 ) where
 
 import Data.Array (Array)
@@ -39,8 +41,14 @@ type Position = (Int, Int) -- x, y
 (!) :: Matrix a -> Position -> a
 mat ! (x, y) = mat `S.index` y `S.index` x
 
-(!?) :: Position -> Matrix a -> Maybe a
-(!?) (x, y) mat = mat S.!? y >>= (S.!? x)
+(!?) :: Matrix a -> Position -> Maybe a
+(!?) mat (x, y) = mat S.!? y >>= (S.!? x)
+
+update :: Position -> a -> Matrix a -> Matrix a
+update (x, y) val mat = 
+  let row = mat `S.index` y
+      updatedRow = S.update x val row
+  in S.update y updatedRow mat
 
 height :: Matrix a -> Int
 height = S.length
@@ -101,3 +109,9 @@ mapCols f mat = transpose $ S.fromList $ Prelude.map (S.fromList . f . Data.Fold
 
 mapRows :: ([a] -> [b]) -> Matrix a -> Matrix b
 mapRows f mat = S.fromList $ Prelude.map (S.fromList . f . Data.Foldable.toList) $ Data.Foldable.toList mat
+
+prettyPrint :: Show a => Matrix a -> String
+prettyPrint mat = 
+  let list = Lib.Matrix.toList $ Lib.Matrix.map (\s -> show s ++ " ") mat
+  in  
+    "[" ++ unlines (Prelude.map concat list) ++ "]"
